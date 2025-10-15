@@ -2,6 +2,8 @@ import SwiftUI
 
 struct DailyView: View {
     @StateObject private var store = InMemoryStore()
+    @State private var isPresentingAdd = false
+    @State private var newTitle: String = ""
 
     var body: some View {
         List {
@@ -41,9 +43,35 @@ struct DailyView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    // 後で編集画面へ
+                    isPresentingAdd = true
                 } label: {
-                    Image(systemName: "slider.horizontal.3")
+                    Image(systemName: "plus")
+                }
+            }
+        }
+        .sheet(isPresented: $isPresentingAdd) {
+            NavigationStack {
+                Form {
+                    Section(header: Text("タイトル")) {
+                        TextField("例: 歯みがき", text: $newTitle)
+                            .submitLabel(.done)
+                    }
+                }
+                .navigationTitle("TODOを追加")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("閉じる") { isPresentingAdd = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("追加") {
+                            let title = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !title.isEmpty else { return }
+                            store.addTask(title: title)
+                            newTitle = ""
+                            isPresentingAdd = false
+                        }
+                        .disabled(newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
                 }
             }
         }
