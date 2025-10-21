@@ -11,7 +11,9 @@ import SwiftUI
 struct TODOApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                DailyView()
+            }
         }
     }
 }

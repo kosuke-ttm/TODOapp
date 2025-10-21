@@ -27,8 +27,8 @@ final class InMemoryStore: ObservableObject {
         objectWillChange.send()
     }
 
-    func addTask(title: String) {
-        let newTask = RoutineTask(title: title, notification: nil, completionLogs: [])
+    func addTask(title: String, notification: NotificationSetting? = nil) {
+        let newTask = RoutineTask(title: title, notification: notification, completionLogs: [])
         tasks.append(newTask)
         objectWillChange.send()
     }
